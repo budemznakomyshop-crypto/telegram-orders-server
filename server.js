@@ -21,6 +21,8 @@ Email: ${email || "-"}
 Комментарий: ${comment || "-"}
 Продукт: ${product}`;
 
+  console.log("Response from Telegram:", data);
+  
   try {
     const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
       method: "POST",
