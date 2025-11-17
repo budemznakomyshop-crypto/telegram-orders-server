@@ -3,29 +3,26 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const fetch = require("node-fetch");
 
-// Токены из окружения Render
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const CHAT_ID = process.env.CHAT_ID;
 
 const app = express();
-
 app.use(bodyParser.json());
 app.use(cors());
 
-// Приём заказов
 app.post("/order", async (req, res) => {
   const { name, phone, email, address, comment, product } = req.body;
 
-  const message = Новый заказ:
+  const message = `Новый заказ:
 Имя: ${name}
 Телефон: ${phone}
 Email: ${email || "-"}
 Адрес: ${address || "-"}
 Комментарий: ${comment || "-"}
-Продукт: ${product};
+Продукт: ${product}`;
 
   try {
-    const response = await fetch(https://api.telegram.org/bot${BOT_TOKEN}/sendMessage, {
+    const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -33,7 +30,6 @@ Email: ${email || "-"}
         text: message
       })
     });
-
     const data = await response.json();
 
     if (!response.ok) {
@@ -47,10 +43,7 @@ Email: ${email || "-"}
   }
 });
 
-// Проверка сервера (важно для Render)
-app.get("/", (req, res) => {
-  res.send("Server is working");
-});
+app.get("/", (req, res) => res.send("Server is working"));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(Server running on port ${PORT}));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
