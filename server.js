@@ -21,18 +21,21 @@ Email: ${email || "-"}
 Комментарий: ${comment || "-"}
 Продукт: ${product}`;
 
-  console.log("Response from Telegram:", data);
-  
   try {
-    const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: CHAT_ID,
-        text: message
-      })
-    });
+    const response = await fetch(
+      `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: message
+        })
+      }
+    );
+
     const data = await response.json();
+    console.log("Response from Telegram:", data);
 
     if (!response.ok) {
       throw new Error(JSON.stringify(data));
