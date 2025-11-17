@@ -21,6 +21,9 @@ Email: ${email || "-"}
 Комментарий: ${comment || "-"}
 Продукт: ${product}`;
 
+ console.log("BOT_TOKEN:", BOT_TOKEN);
+console.log("CHAT_ID:", CHAT_ID);
+  
   try {
     const response = await fetch(
       `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
