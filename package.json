@@ -1,18 +1,16 @@
 {
   "name": "telegram-orders",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "Telegram order bot server",
+  "main": "server.js",
   "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "body-parser": "^2.2.0",
     "express": "^5.1.0",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^3.3.2",
+    "cors": "^2.8.5"
   }
 }
