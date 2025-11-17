@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const fetch = require("node-fetch"); // важно!
+const fetch = require("node-fetch");
 
 // Токены из окружения Render
 const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -35,6 +35,7 @@ Email: ${email || "-"}
     });
 
     const data = await response.json();
+
     if (!response.ok) {
       throw new Error(JSON.stringify(data));
     }
@@ -44,6 +45,11 @@ Email: ${email || "-"}
     console.error("Telegram error:", err);
     res.status(500).send({ success: false, error: err.message });
   }
+});
+
+// Проверка сервера (важно для Render)
+app.get("/", (req, res) => {
+  res.send("Server is working");
 });
 
 const PORT = process.env.PORT || 3000;
