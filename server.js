@@ -11,19 +11,41 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.post("/order", async (req, res) => {
-  const { name, phone, email, address, comment, product } = req.body;
+  // Диагностические логи — можно удалить позже
+  console.log("=== /order incoming ===");
+  console.log("Headers:", req.headers);
+  console.log("Raw body (req.body):", req.body);
+
+  const { name, phone, email, address, comment, product } = req.body || {};
+
+  // Защитная функция: преобразует undefined / пустую строку в "-"
+  const safe = (v) => {
+    try {
+      if (v === undefined || v === null) return "-";
+      if (typeof v === "string") {
+        const t = v.trim();
+        return t.length > 0 ? t : "-";
+      }
+      // для объектов/чисел — приводим к строке
+      const s = String(v);
+      return s.trim().length > 0 ? s : "-";
+    } catch (e) {
+      return "-";
+    }
+  };
 
   const message = `Новый заказ:
-Имя: ${name}
-Телефон: ${phone}
-Email: ${email || "-"}
-Адрес: ${address || "-"}
-Комментарий: ${comment || "-"}
-Продукт: ${product}`;
+Имя: ${safe(name)}
+Телефон: ${safe(phone)}
+Email: ${safe(email)}
+Адрес: ${safe(address)}
+Комментарий: ${safe(comment)}
+Продукт: ${safe(product)}`;
 
- console.log("BOT_TOKEN:", BOT_TOKEN);
-console.log("CHAT_ID:", CHAT_ID);
-  
+  console.log("BOT_TOKEN:", BOT_TOKEN ? "present" : "MISSING");
+  console.log("CHAT_ID:", CHAT_ID ? CHAT_ID : "MISSING");
+  console.log("Message text preview:", message);
+
   try {
     const response = await fetch(
       `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
