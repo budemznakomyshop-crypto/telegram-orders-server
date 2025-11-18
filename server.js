@@ -16,7 +16,48 @@ app.post("/order", async (req, res) => {
   console.log("Headers:", req.headers);
   console.log("Raw body (req.body):", req.body);
 
-  const { name, phone, email, address, comment, product } = req.body || {};
+  // Поддерживаем оба варианта: старый (поля на верхнем уровне)
+  // и новый (данные в req.body.customer и товары в req.body.items)
+  const {
+    // возможные старые поля (если ещё кто-то шлёт старую структуру)
+    name: nameTop,
+    phone: phoneTop,
+    email: emailTop,
+    address: addressTop,
+    comment: commentTop,
+    product: productTop,
+    // новые возможные поля
+    customer,
+    items,
+    total,
+    deliveryType,
+    selectedCafe,
+  } = req.body || {};
+
+  // Берём данные из customer (если есть), иначе из верхнего уровня
+  const name = customer?.name ?? nameTop;
+  const phone = customer?.phone ?? phoneTop;
+  const email = customer?.email ?? emailTop;
+  const address = customer?.address ?? addressTop;
+  const comment = customer?.comment ?? commentTop;
+
+  // Формируем продукт: сначала проверяем product из тела, иначе соберём из items
+  const product = (() => {
+    if (productTop) return productTop;
+    if (Array.isArray(items) && items.length > 0) {
+      try {
+        return items
+          .map(
+            (i) =>
+              `${i.name} x${i.quantity} — ${Number(i.price) * Number(i.quantity)} ₽`
+          )
+          .join("\n");
+      } catch (e) {
+        return undefined;
+      }
+    }
+    return undefined;
+  })();
 
   // Защитная функция: преобразует undefined / пустую строку в "-"
   const safe = (v) => {
