@@ -41,6 +41,8 @@ app.post("/order", async (req, res) => {
   const address = customer?.address ?? addressTop;
   const comment = customer?.comment ?? commentTop;
 
+  const cafe = selectedCafe ?? "-";
+
   // Формируем продукт: сначала проверяем product из тела, иначе соберём из items
   const product = (() => {
     if (productTop) return productTop;
@@ -80,6 +82,7 @@ app.post("/order", async (req, res) => {
 Телефон: ${safe(phone)}
 Email: ${safe(email)}
 Адрес: ${safe(address)}
+${deliveryType === "pickup" ? `cafe: ${safe(cafe)}` : ""}
 Комментарий: ${safe(comment)}
 Продукт: ${safe(product)}`;
 
